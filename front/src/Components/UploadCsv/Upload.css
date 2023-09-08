@@ -1,47 +1,45 @@
-/* Estilos para o título da página */
 .page-title {
     font-size: 24px;
     text-align: center;
     margin-top: 20px;
+    font-weight: 700;
 }
 
-/* Estilos para o campo de entrada de arquivo CSV */
 .csv-input {
     display: block;
     margin: 20px auto;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 10px;
     width: 80%;
     max-width: 300px;
 }
 
-/* Estilos para o botão de validação */
 .validate-button {
     display: block;
     margin: 10px auto;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #25E6AE;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
 }
 
 .validate-button:hover {
-    background-color: #0056b3;
+    background-color: #25BE90;
 }
 
 .validate-button.variant{
-    background-color: #d6bc28;
+    background-color: #25E6AE;
 }
 
 .validate-button.variant:hover{
-    background-color: #af9a21;
+    background-color: #25BE90;
 }
 
-/* Estilos para a tabela */
 .product-table {
     width: 100%;
     max-width: 800px;
@@ -55,13 +53,15 @@
     padding: 8px;
 }
 
-/* Estilos para o cabeçalho da tabela */
 .product-table thead {
-    background-color: #333;
     color: #fff;
+    border-radius: 10px 10px 0 0;
 }
 
-/* Estilos para as células da tabela */
+.product-table th {
+    background-color: #023880;
+}
+
 .product-table tbody td {
     text-align: center;
 }

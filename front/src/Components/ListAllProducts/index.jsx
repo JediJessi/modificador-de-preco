@@ -4,7 +4,6 @@ import './ListAllProducts.css'
 
 const ListAllProducts = (props) => {
     const {isUpdated, setValues} = props
-
     const [ResponseData, setResponseData] = useState()
     
     const getAllProducts = () => {
@@ -16,7 +15,6 @@ const ListAllProducts = (props) => {
             console.error(err)
         })
     }
-
     useEffect(() => {
         getAllProducts()
         setValues(ResponseData)
@@ -25,28 +23,28 @@ const ListAllProducts = (props) => {
     setValues(ResponseData)
   return (
     <>
-    <table className="product-table"> 
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Preço de custo</th>
-              <th>Nome</th>
-              <th>Preço de venda</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-            ResponseData?.map((row, index) => (
-              <tr key={index}>
-                <td>{row.code}</td>
-                <td>{row.cost_price}</td>
-                <td>{row.name}</td>
-                <td>{row.sales_price}</td>  
-              </tr>
-            ))
-            }
-          </tbody>
-        </table>
+      <table className="product-table"> 
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Preço de custo</th>
+            <th>Nome do produto</th>
+            <th>Preço de venda</th>
+          </tr>
+        </thead>
+        <tbody>
+        {
+        ResponseData?.map((row, index) => (
+          <tr key={index}>
+            <td>{row.code}</td>
+            <td>{row.cost_price}</td>
+            <td>{row.name}</td>
+            <td>{row.sales_price}</td>  
+          </tr>
+        ))
+        }
+        </tbody>
+      </table>
     </>
   )
 }

@@ -3,13 +3,16 @@ const router = require('express').Router()
 const cors = require('cors')
 router.use(cors())
 const mysql = require('mysql2/promise');
-// const connection = require('../db.js');
 
-async function executeQuery(query) {
+const executeQuery = async (query) => {
+    const DB_USER = process.env.DB_USER
+    const DB_PASS = encodeURIComponent(process.env.DB_PASS)
+
     const connection = await mysql.createConnection({
       host: 'localhost',
-      user: 'root',
-      password: 'zuzuroot0504',
+      port: '3306',
+      user: DB_USER,
+      password: DB_PASS,
       database: 'price',
     });
   
@@ -42,6 +45,23 @@ router.get('/', async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: 'Erro na consulta' });
     }
+});
+
+
+router.get('/packs', async (req, res) => {
+  try {
+      const query = 'SELECT * FROM packs';
+      const result = await executeQuery(query);
+
+      if (Array.isArray(result)) {
+          res.json(result);
+      } else {
+          console.error('A consulta não retornou um resultado iterável');
+          res.status(500).json({ error: 'Erro na consulta' });
+      }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro na consulta' });
+  }
 });
 
 router.patch('/:productId', async (req, res) => {

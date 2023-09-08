@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -12,6 +12,7 @@ const Upload = (props) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [isPush, setisPush] = useState(false);
   const [status] = useState([]);
+  const [ResponsePack, setResponsePack] = useState()
 
   const handleValidValues = async (force = false) => {
     try {
@@ -25,23 +26,25 @@ const Upload = (props) => {
            isValue?.map((oldEl) => {
             if (oldEl.code === obj.code) {
               if (el.new_price > (Number(oldEl.sales_price) + (oldEl.sales_price * 0.10))) {
-                status?.push('Maior Que 10%')
+                status.push('Maior Que 10%')
                 setisPush(true)
               }
 
               else if (el.new_price < (Number(oldEl.sales_price) + (oldEl.sales_price * 0.10))) {
-                status?.push('Menor Que 10%')
+                status.push('Menor Que 10%')
                 setisPush(true)
               }
 
               else if (el.new_price === (Number(oldEl.sales_price) + (oldEl.sales_price * 0.10))) {
-                status?.push('Esta Dentro Dos Padroes')
+                status.push('Esta Dentro Dos Padroes')
                 setisPush(true)
               }
 
               if (force === true) {
+                HandleUpdatePaksToProducts()
                 axios.patch(`http://localhost:8888/products/${el.product_code}`, obj).then(setIsUpdated(true))
                 closeModal()
+                window.location.reload(true)
               }
             }
            })
@@ -78,16 +81,42 @@ const Upload = (props) => {
     }
   };
 
-const mergArray = () => {
-  status?.map((values, key) => {
-    csvData[key].status = values;
-  })
-} 
+  const mergArray = () => {
+    status?.map((values, key) => {
+      csvData[key].status = values;
+    })
+  } 
+
+  const getAllPacks = () => {
+    axios.get('http://localhost:8888/products/packs')
+    .then((data) => {
+      setResponsePack(data.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
+
+  const HandleUpdatePaksToProducts = () => {
+    csvData?.map((el) => {
+      ResponsePack.map((pack) => {
+        if (el.product_code === pack.product_id) {
+          const packTotal = (el.new_price * pack.qty)
+          return axios.patch(`http://localhost:8888/products/${pack.pack_id}`, {sales_price: packTotal, code: pack.pack_id}).then(setIsUpdated(true))
+        }
+      })
+    })
+  }
+
+  useEffect(() => {
+    HandleUpdatePaksToProducts()
+    getAllPacks()
+  }, [csvData])
 
   return (
     <div className="Upload">
       <h1 className="page-title">Modificador de preço</h1>
-      <input class="csv-input" type="file" accept=".csv" onChange={handleFileChange} />
+      <input className="csv-input" type="file" accept=".csv" onChange={handleFileChange} />
       {csvData.length > 0 && (
         <>
         <button className="validate-button" onClick={() => openModal()}>Validar</button>
@@ -98,14 +127,14 @@ const mergArray = () => {
         >
 
           <button className='on-close-modal' onClick={closeModal}>x</button>
-          <button className="validate-button" onClick={() => handleValidValues(false)}>Validar Todos Os Campos</button>
-          {!isPush || <button  className="validate-button variant" onClick={() => handleValidValues(true)}>Confirmo Que Desejo Alterar</button>}
+          <button className="validate-button" onClick={() => handleValidValues(false)}>Validar todos os campos</button>
+          {!isPush || <button  className="validate-button variant" onClick={() => handleValidValues(true)}>Confirmar alteração</button>}
 
           <table className="product-table">
               <thead>
                   <tr>
-                  <th>Codigo Do Produto</th>
-                  <th>Novo Preço</th>
+                  <th>Codigo do produto</th>
+                  <th>Novo preço</th>
                   <th>Status</th>
                   </tr>
               </thead>
