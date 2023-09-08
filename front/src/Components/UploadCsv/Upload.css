@@ -1,0 +1,78 @@
+.page-title {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 700;
+}
+
+.csv-input {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+}
+
+.validate-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color: #25E6AE;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.validate-button:hover {
+    background-color: #25BE90;
+}
+
+.validate-button.variant{
+    background-color: #25E6AE;
+}
+
+.validate-button.variant:hover{
+    background-color: #25BE90;
+}
+
+.product-table {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.product-table th,
+.product-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+.product-table thead {
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+}
+
+.product-table th {
+    background-color: #023880;
+}
+
+.product-table tbody td {
+    text-align: center;
+}
+
+.on-close-modal {
+    background-color: transparent;
+    color: red;
+    top: 20px;
+    right: 20px;
+    position: absolute;
+    border-color: transparent;
+    cursor: pointer;
+    font-size: 20px;
+}
