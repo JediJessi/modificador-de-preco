@@ -1,93 +1,65 @@
+require('dotenv').config()
 const router = require('express').Router()
-const componentProduct = require('../models/componentProduct')
-const packProduct = require('../models/packProduct')
 const cors = require('cors')
-
 router.use(cors())
+const mysql = require('mysql2/promise');
+// const connection = require('../db.js');
+
+async function executeQuery(query) {
+    const connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: 'zuzuroot0504',
+      database: 'price',
+    });
+  
+    try {
+      const [results, fields] = await connection.query(query);
+  
+      if (Array.isArray(results)) {
+        return results;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      await connection.end();
+    }
+  }
 
 router.get('/', async (req, res) => {
     try {
-        
-        if (req.query.name) {
-            const regs = await Conta.findOne({ name: req.query.name })
-
-            return res.status(200).json(regs)
+        const query = 'SELECT * FROM products';
+        const result = await executeQuery(query);
+  
+        if (Array.isArray(result)) {
+            res.json(result);
+        } else {
+            console.error('A consulta não retornou um resultado iterável');
+            res.status(500).json({ error: 'Erro na consulta' });
         }
-
-        if (req.query.user && req.query.mes && req.query.ano) {
-            const regs = await Conta.find({ user: req.query.user, mes: req.query.mes, ano: req.query.ano })
-
-            return res.status(200).json(regs)
-        }
-
-        const regs = await Conta.find()
-        res.status(200).json(regs)
+    } catch (error) {
+      res.status(500).json({ error: 'Erro na consulta' });
     }
+});
 
-    catch (error) {
-        res.status(500).json({ error: error })
-    }
-})
-
-
-router.get('/:id', async (req, res) => {
-    const id = req.params.name
-    
-    res.header("Access-Control-Allow-Origin", "*");
-
+router.patch('/:productId', async (req, res) => {
     try {
-        const regs = await Conta.findOne({ _id: id })
+        const code = req.body.code;
+        const { name, cost_price, sales_price } = req.body;
 
-        res.status(200).json(regs)
+        console.log(req.body.code)
+
+        const updateQuery = `UPDATE products SET sales_price = ${sales_price} WHERE code = ${code}`;
+
+        await executeQuery(updateQuery);
+        res.json({ message: 'Produto atualizado com sucesso' });
+
+    } catch (error) {
+        console.error('Erro:', error);
+        res.status(500).json({ error: 'Erro na atualização do produto' });
     }
-
-    catch (error) {
-        res.status(500).json({ error: 'Registro não encontrado' })
-    }
-})
-
-
-router.patch('/:id', async (req, res) => {
-    const id = req.params.id
-    const dateNow = new Date()
-
-    const { name, user, value, type, paid_out, month, year } = req.body
-
-    const conta = {
-        name,
-        user,
-        value,
-        paid_out,
-        type,
-        month: dateNow.getMonth(),
-        year: dateNow.getFullYear()
-    }
-
-    try {
-        const updateValue = await Conta.updateOne({ _id: id }, conta)
-
-        res.status(200).json(conta)
-    }
-
-    catch (error) {
-        res.status(500).json({ error: 'Registro não atualizado' })
-    }
-})
-
-
-router.delete('/:id', async (req, res) => {
-    const id = req.params.id
-
-    try {
-        const deleteValue = await Conta.deleteOne({ _id: id })
-
-        res.status(200).json({ message: 'Registro removido com sucesso' })
-    }
-
-    catch (error) {
-        res.status(500).json({ error: 'Registro não deletado' })
-    }
-})
-
+});
 
 module.exports = router
