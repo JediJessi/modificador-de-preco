@@ -14,12 +14,13 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 
 1. Instale o MySQL e crie um banco de dados vazio.
 
-2. Copie o arquivo `.env.example` para um novo arquivo chamado `.env` na pasta do backend e configure as variáveis de ambiente relacionadas ao banco de dados, como `DB_HOST`, `DB_USER`, `DB_PASSWORD` e `DB_DATABASE`.
-
-3. Importe os dados do arquivo `database.sql` para o banco de dados:
-
+2. Crie um novo arquivo chamado `.env` na raiz do diretório back-end e configure as variáveis de ambiente relacionadas ao banco de dados, `DB_USER`, `DB_PASS`.
+   
    ```bash
-   mysql -u [SEU_USUÁRIO] -p [NOME_DO_BANCO] < database.sql
+   DB_USER = "user_do_mySql"
+   DB_PASS = "senha_do_mySql"
+
+4. Importe os dados do arquivo `./sql/database.sql` para o banco de dados:
 
 ## Configuração do Backend
 
